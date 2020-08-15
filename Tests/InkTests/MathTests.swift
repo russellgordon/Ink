@@ -10,7 +10,7 @@ import Ink
 final class MathTests: XCTestCase {
     func testInlineMath() {
         let html = MarkdownParser().html(from: #"\(Hello \Latex\)"#)
-        XCTAssertEqual(html, #"<p><span class="math inline">\(Hello \Latex\)</span></p>"#)
+        XCTAssertEqual(html, #"<span class="math inline">\(Hello \Latex\)</span>"#)
     }
     
     func testDisplayMath() {
@@ -80,6 +80,26 @@ final class MathTests: XCTestCase {
         let html = MarkdownParser().html(from: #"Asterix \* and \(Hello \Latex\)"#)
         XCTAssertEqual(html, #"<p>Asterix * and <span class="math inline">\(Hello \Latex\)</span></p>"#)
     }
+    
+    func testPictureTagWithDisplayModeEquationAndParagraphWithLink() {
+        let html = MarkdownParser().html(from: #"""
+                                                <picture>
+                                                    <source srcset="equation-2-dark.png" media="(prefers-color-scheme: dark)">
+                                                    <img src="equation-2.png" loading="lazy" alt="Vertex form of a quadratic" style="width:166px;"/>
+                                                </picture>
+
+                                                \[y = a\left(x-h\right)^2+k\]
+
+                                                You might even struggle to make it through, who knows, dressing up some drab review of quadratic relations by [using a *Jeopardy!* template](https://duckduckgo.com/?q=jeopardy+templates&t=osx&ia=web) at the end of a unit of study.
+                                                """#)
+        
+        XCTAssertEqual(html, #"""
+                                <picture>
+                                    <source srcset="equation-2-dark.png" media="(prefers-color-scheme: dark)">
+                                    <img src="equation-2.png" loading="lazy" alt="Vertex form of a quadratic" style="width:166px;"/>
+                                </picture><p><span class="math display">\[y = a\left(x-h\right)^2+k\]</span></p><p>You might even struggle to make it through, who knows, dressing up some drab review of quadratic relations by <a href="https://duckduckgo.com/?q=jeopardy+templates&t=osx&ia=web">using a <em>Jeopardy!</em> template</a> at the end of a unit of study.</p>
+                                """#)
+    }
 }
 
 extension MathTests {
@@ -92,6 +112,7 @@ extension MathTests {
             ("testDisplayMultiLineProgression", testDisplayMultiLineProgression),
             ("testDisplayMultiLineAlignedEquationProgression", testDisplayMultiLineAlignedEquationProgression),
             ("testMathWithEscape", testMathWithEscape),
+            ("testPictureTagWithDisplayModeEquationAndParagraphWithLink", testPictureTagWithDisplayModeEquationAndParagraphWithLink),
         ]
     }
 }

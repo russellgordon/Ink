@@ -128,6 +128,11 @@ private extension MarkdownParser {
             return HorizontalLine.self
         case "-", "*", "+", \.isNumber: return List.self
         case "|": return Table.self
+        case "\\":
+            if ["[","("].contains(nextCharacter) {
+                return Math.self
+            }
+            fallthrough
         default: return Paragraph.self
         }
     }

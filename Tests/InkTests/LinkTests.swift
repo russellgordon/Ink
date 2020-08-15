@@ -66,8 +66,16 @@ final class LinkTests: XCTestCase {
     }
     
     func testLinkWithEscapedSquareBrackets() {
+        // It doesn't make a ton of sense to include a display equation inside a link, but I believe this assertion is accurate, since display-mode equations are always displayed distinct from another body of text – so the <p></p> tags inside the link are required.
+        // SEE: https://www.overleaf.com/learn/latex/Display_style_in_math_mode for visual example.
         let html = MarkdownParser().html(from: "[\\[Hello\\]](hello)")
-        XCTAssertEqual(html, #"<p><a href="hello"><span class="math display">\[Hello\]</span></a></p>"#)
+        XCTAssertEqual(html, #"<p><a href="hello"><p><span class="math display">\[Hello\]</span></p></a></p>"#)
+    }
+
+    func testLinkWithEscapedRoundBrackets() {
+        // If someone was going to include an equation inside a link, it seems like they would use an inline equation.
+        let html = MarkdownParser().html(from: "[\\(Hello\\)](hello)")
+        XCTAssertEqual(html, #"<p><a href="hello"><span class="math inline">\(Hello\)</span></a></p>"#)
     }
 }
 
@@ -82,7 +90,8 @@ extension LinkTests {
             ("testBoldLinkWithExternalMarkers", testBoldLinkWithExternalMarkers),
             ("testLinkWithUnderscores", testLinkWithUnderscores),
             ("testUnterminatedLink", testUnterminatedLink),
-            ("testLinkWithEscapedSquareBrackets", testLinkWithEscapedSquareBrackets)
+            ("testLinkWithEscapedSquareBrackets", testLinkWithEscapedSquareBrackets),
+            ("testLinkWithEscapedRoundBrackets", testLinkWithEscapedRoundBrackets),
         ]
     }
 }
