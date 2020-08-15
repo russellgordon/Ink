@@ -27,6 +27,10 @@ internal struct Math: Fragment {
         while !reader.didReachEnd {
             switch reader.currentCharacter {
                 
+            case "&":
+                tex.append(reader.currentCharacter)
+                reader.advanceIndex()
+                
             case "\\" :
                 guard let nextCharacter = reader.nextCharacter else {
                     throw Reader.Error()
