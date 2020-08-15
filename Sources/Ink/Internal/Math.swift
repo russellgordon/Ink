@@ -58,10 +58,12 @@ internal struct Math: Fragment {
     
     func html(usingURLs urls: NamedURLCollection,
               modifiers: ModifierCollection) -> String {
-        let modeString = displayMode ? "display" : "inline"
-        let openingDelimiter = displayMode ? "[" : "("
-        let closingDelimiter = displayMode ? "]" : ")"
-        return "<span class=\"math \(modeString)\">\\\(openingDelimiter)\(tex)\\\(closingDelimiter)</span>"
+
+        if displayMode {
+            return "<p><span class=\"math display\">\\[\(tex)\\]</span></p>"
+        } else {
+            return "<span class=\"math inline\">\\(\(tex)\\)</span>"
+        }
     }
     
     func plainText() -> String {
