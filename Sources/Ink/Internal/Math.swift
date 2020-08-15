@@ -26,8 +26,6 @@ internal struct Math: Fragment {
         
         while !reader.didReachEnd {
             switch reader.currentCharacter {
-            case \.isNewline :
-                throw Reader.Error()
                 
             case "\\" :
                 guard let nextCharacter = reader.nextCharacter else {
