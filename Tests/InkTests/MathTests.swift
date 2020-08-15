@@ -10,7 +10,7 @@ import Ink
 final class MathTests: XCTestCase {
     func testInlineMath() {
         let html = MarkdownParser().html(from: #"\(Hello \Latex\)"#)
-        XCTAssertEqual(html, #"<p><span class="math inline">\(Hello \Latex\)</span></p>"#)
+        XCTAssertEqual(html, #"<span class="math inline">\(Hello \Latex\)</span>"#)
     }
     
     func testDisplayMath() {
