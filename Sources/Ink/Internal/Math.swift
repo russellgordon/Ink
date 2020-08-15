@@ -28,6 +28,7 @@ internal struct Math: Fragment {
             switch reader.currentCharacter {
             case \.isNewline :
                 throw Reader.Error()
+                
             case "\\" :
                 guard let nextCharacter = reader.nextCharacter else {
                     throw Reader.Error()
@@ -39,6 +40,7 @@ internal struct Math: Fragment {
                 }
                 
                 fallthrough
+                
             default:
                 if let escaped = reader.currentCharacter.escaped {
                     tex.append(escaped)
@@ -46,6 +48,7 @@ internal struct Math: Fragment {
                     tex.append(reader.currentCharacter)
                 }
                 reader.advanceIndex()
+                
             }
         }
         throw Reader.Error()
@@ -54,7 +57,9 @@ internal struct Math: Fragment {
     func html(usingURLs urls: NamedURLCollection,
               modifiers: ModifierCollection) -> String {
         let modeString = displayMode ? "display" : "inline"
-        return "<span class=\"math \(modeString)\">\(tex)</span>"
+        let openingDelimiter = displayMode ? "[" : "("
+        let closingDelimiter = displayMode ? "]" : ")"
+        return "<span class=\"math \(modeString)\">\\\(openingDelimiter)\(tex)\\\(closingDelimiter)</span>"
     }
     
     func plainText() -> String {
